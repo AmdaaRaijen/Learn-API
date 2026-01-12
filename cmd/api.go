@@ -1,10 +1,11 @@
 package main
 
 import (
-	"net/http"
 	"log"
+	"net/http"
 	"time"
 
+	"github.com/amdaaraijen/Learn-API/internal/products"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -22,6 +23,10 @@ func (app *api) mount() http.Handler {
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Ok"))
 	})
+
+	productHandler := products.NewHandler(nil)
+
+	r.Get("/products", productHandler.ListProducts)
 
 	return r
 }
