@@ -14,7 +14,12 @@ func NewHandler(s Service) *handler {
 }
 
 func(h *handler) ListProducts(w http.ResponseWriter, r *http.Request) {
-	data := []string{"product1", "product2", "product3"}
+	data, err := h.service.GetListOfProducts()
+
+	if err != nil {
+		http.Error(w, "Failed to get product", http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
