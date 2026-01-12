@@ -1,17 +1,25 @@
 package products
 
+import (
+	"context"
+
+	repo "github.com/amdaaraijen/Learn-API/internal/adapters/pgsql/sqlc"
+)
+
 type Service interface {
-	GetListOfProducts() ([]string, error)
+	GetListOfProducts(ctx context.Context) ([]repo.Product, error)
 }
 
-type service struct {}
-
-func NewService() *service {
-	return  &service{}
+type service struct {
+	repo repo.Querier
 }
 
-func (s *service) GetListOfProducts() ([]string, error) {
-	data := []string{"product1", "product2", "product3"}
-	
-	return  data, nil
+func NewService(repo repo.Querier) *service {
+	return  &service{
+		repo: repo,
+	}
+}
+
+func (s *service) GetListOfProducts(ctx context.Context) ([]repo.Product, error) {
+	return s.repo.ListProducts(ctx)
 }

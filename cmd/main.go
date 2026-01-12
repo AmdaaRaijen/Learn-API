@@ -19,24 +19,27 @@ func main() {
 	},
 	}
 
-	api := api{
-		config: config,
-	}
-
+	
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 	slog.SetDefault(logger)
-
+	
 	ctx := context.Background()
-
+	
 	conn, DBErr := pgx.Connect(ctx, config.db.dsn)
-
+	
 	if DBErr != nil {
 		panic(DBErr)
 	}
-
+	
 	defer conn.Close(ctx)
-
+	
+	
 	logger.Info("connected to database")
+	
+	api := api{
+		config: config,
+		db: conn,
+	}
 
 	runnerErr := api.run(api.mount())
 

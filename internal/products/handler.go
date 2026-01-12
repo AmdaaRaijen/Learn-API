@@ -14,7 +14,7 @@ func NewHandler(s Service) *handler {
 }
 
 func(h *handler) ListProducts(w http.ResponseWriter, r *http.Request) {
-	data, err := h.service.GetListOfProducts()
+	products, err := h.service.GetListOfProducts(r.Context())
 
 	if err != nil {
 		http.Error(w, "Failed to get product", http.StatusInternalServerError)
@@ -23,5 +23,5 @@ func(h *handler) ListProducts(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(data)
+	json.NewEncoder(w).Encode(products)
 }
