@@ -1,10 +1,10 @@
 package products
 
 import (
-	"encoding/json"
 	"log/slog"
 	"net/http"
 
+	"github.com/amdaaraijen/Learn-API/internal/json"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -28,7 +28,5 @@ func(h *handler) ListProducts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(products)
+	json.Write(w, http.StatusOK, products)
 }
