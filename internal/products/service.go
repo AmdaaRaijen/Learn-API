@@ -4,10 +4,11 @@ import (
 	"context"
 
 	repo "github.com/amdaaraijen/Learn-API/internal/adapters/pgsql/sqlc"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Service interface {
-	GetListOfProducts(ctx context.Context) ([]repo.Product, error)
+	GetListOfProducts(ctx context.Context, name pgtype.Text) ([]repo.Product, error)
 }
 
 type service struct {
@@ -20,6 +21,8 @@ func NewService(repo repo.Querier) *service {
 	}
 }
 
-func (s *service) GetListOfProducts(ctx context.Context) ([]repo.Product, error) {
-	return s.repo.ListProducts(ctx)
+func (s *service) GetListOfProducts(ctx context.Context, name pgtype.Text) ([]repo.Product, error) {
+	if name.Valid { return  s.repo.ListProducts(ctx, name)}
+
+	return s.repo.ListProducts(ctx, "")
 }

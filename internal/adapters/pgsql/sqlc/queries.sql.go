@@ -28,11 +28,12 @@ func (q *Queries) FindProductByID(ctx context.Context, id int64) (Product, error
 
 const listProducts = `-- name: ListProducts :many
 SELECT id, name, price, quantity, created_at FROM products
+WHERE ($1 = '' OR name ILIKE '%' || $1 || '%')
 ORDER BY name
 `
 
-func (q *Queries) ListProducts(ctx context.Context) ([]Product, error) {
-	rows, err := q.db.Query(ctx, listProducts)
+func (q *Queries) ListProducts(ctx context.Context, dollar_1 interface{}) ([]Product, error) {
+	rows, err := q.db.Query(ctx, listProducts, dollar_1)
 	if err != nil {
 		return nil, err
 	}

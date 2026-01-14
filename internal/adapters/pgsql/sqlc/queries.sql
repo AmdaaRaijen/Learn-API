@@ -1,5 +1,6 @@
 -- name: ListProducts :many
 SELECT * FROM products
+WHERE ($1 = '' OR name ILIKE '%' || $1 || '%')
 ORDER BY name;
 
 
