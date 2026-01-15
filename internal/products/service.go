@@ -9,6 +9,7 @@ import (
 
 type Service interface {
 	GetListOfProducts(ctx context.Context, name pgtype.Text) ([]repo.Product, error)
+	GetProductById(ctx context.Context, id int64) (repo.Product, error)
 }
 
 type service struct {
@@ -25,4 +26,8 @@ func (s *service) GetListOfProducts(ctx context.Context, name pgtype.Text) ([]re
 	if name.Valid { return  s.repo.ListProducts(ctx, name)}
 
 	return s.repo.ListProducts(ctx, "")
+}
+
+func(s *service) GetProductById(ctx context.Context, id int64)(repo.Product, error) {
+	return s.repo.FindProductByID(ctx, id)
 }

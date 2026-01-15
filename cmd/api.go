@@ -29,7 +29,10 @@ func (app *api) mount() http.Handler {
 	productService := products.NewService(repo.New(app.db))
 	productHandler := products.NewHandler(productService)
 
-	r.Get("/products", productHandler.ListProducts)
+	r.Route("/products", func(r chi.Router) {
+		r.Get("/", productHandler.ListProducts)
+		r.Get("/{id}", productHandler.GetProductById)
+	})
 
 	return r
 }
