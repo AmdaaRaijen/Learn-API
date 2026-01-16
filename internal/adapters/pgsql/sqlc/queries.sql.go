@@ -67,6 +67,23 @@ func (q *Queries) FindProductByID(ctx context.Context, id int64) (Product, error
 	return i, err
 }
 
+const getCustomerById = `-- name: GetCustomerById :one
+SELECT id, name, email, phone_number, created_at FROM customers WHERE id = $1
+`
+
+func (q *Queries) GetCustomerById(ctx context.Context, id int64) (Customer, error) {
+	row := q.db.QueryRow(ctx, getCustomerById, id)
+	var i Customer
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Email,
+		&i.PhoneNumber,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const listProducts = `-- name: ListProducts :many
 SELECT id, name, price, quantity, created_at FROM products
 WHERE ($1 = '' OR name ILIKE '%' || $1 || '%')
