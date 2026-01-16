@@ -19,7 +19,7 @@ func NewHandler(s Service) *handler {
 
 
 func (h *handler) PlaceOrder(w http.ResponseWriter, r *http.Request) {
-	tempOrder := createOrderParams{}
+	var tempOrder createOrderParams
 
 	err := json.Read(r, &tempOrder)
 
@@ -28,10 +28,10 @@ func (h *handler) PlaceOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	createdOrder, err := h.service.PlaceOrder(r.Context(), createOrderParams{})
+	createdOrder, err := h.service.PlaceOrder(r.Context(), tempOrder)
 
 	if err != nil {
-		http.Error(w, "Failed to get product", http.StatusInternalServerError)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 

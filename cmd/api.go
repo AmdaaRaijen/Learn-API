@@ -35,7 +35,8 @@ func (app *api) mount() http.Handler {
 		r.Get("/{id}", productHandler.GetProductById)
 	})
 
-	orderHandler := orders.NewHandler(nil)
+	orderService := orders.NewService(repo.New(app.db), app.db)
+	orderHandler := orders.NewHandler(orderService)
 
 	r.Post("/orders", orderHandler.PlaceOrder)
 
