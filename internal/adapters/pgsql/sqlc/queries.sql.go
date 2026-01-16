@@ -9,12 +9,12 @@ import (
 	"context"
 )
 
-const craeteOrder = `-- name: CraeteOrder :one
+const createOrder = `-- name: CreateOrder :one
 INSERT INTO orders (customer_id) VALUES ($1) RETURNING id, customer_id, created_at
 `
 
-func (q *Queries) CraeteOrder(ctx context.Context, customerID int64) (Order, error) {
-	row := q.db.QueryRow(ctx, craeteOrder, customerID)
+func (q *Queries) CreateOrder(ctx context.Context, customerID int64) (Order, error) {
+	row := q.db.QueryRow(ctx, createOrder, customerID)
 	var i Order
 	err := row.Scan(&i.ID, &i.CustomerID, &i.CreatedAt)
 	return i, err

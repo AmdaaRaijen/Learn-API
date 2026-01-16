@@ -8,7 +8,7 @@ ORDER BY name;
 SELECT * FROM products WHERE id = $1;
 
 
--- name: CraeteOrder :one
+-- name: CreateOrder :one
 INSERT INTO orders (customer_id) VALUES ($1) RETURNING *;
 
 -- name: CreateOrderItem :one
