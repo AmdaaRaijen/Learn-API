@@ -9,6 +9,47 @@ import (
 	"context"
 )
 
+const craeteOrder = `-- name: CraeteOrder :one
+INSERT INTO orders (customer_id) VALUES ($1) RETURNING id, customer_id, created_at
+`
+
+func (q *Queries) CraeteOrder(ctx context.Context, customerID int64) (Order, error) {
+	row := q.db.QueryRow(ctx, craeteOrder, customerID)
+	var i Order
+	err := row.Scan(&i.ID, &i.CustomerID, &i.CreatedAt)
+	return i, err
+}
+
+const createOrderItem = `-- name: CreateOrderItem :one
+INSERT INTO order_items (product_id, order_id, quantity, price) VALUES ($1, $2, $3, $4) RETURNING id, product_id, order_id, quantity, price, created_at
+`
+
+type CreateOrderItemParams struct {
+	ProductID int64 `json:"product_id"`
+	OrderID   int64 `json:"order_id"`
+	Quantity  int32 `json:"quantity"`
+	Price     int32 `json:"price"`
+}
+
+func (q *Queries) CreateOrderItem(ctx context.Context, arg CreateOrderItemParams) (OrderItem, error) {
+	row := q.db.QueryRow(ctx, createOrderItem,
+		arg.ProductID,
+		arg.OrderID,
+		arg.Quantity,
+		arg.Price,
+	)
+	var i OrderItem
+	err := row.Scan(
+		&i.ID,
+		&i.ProductID,
+		&i.OrderID,
+		&i.Quantity,
+		&i.Price,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const findProductByID = `-- name: FindProductByID :one
 SELECT id, name, price, quantity, created_at FROM products WHERE id = $1
 `
