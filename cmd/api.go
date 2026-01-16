@@ -21,8 +21,8 @@ func (app *api) mount() http.Handler {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.RequestID)
 
-	r.Use(middleware.Timeout(60*time.Second))
-	
+	r.Use(middleware.Timeout(60 * time.Second))
+
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Ok"))
 	})
@@ -45,11 +45,11 @@ func (app *api) mount() http.Handler {
 
 func (app *api) run(h http.Handler) error {
 	svr := http.Server{
-	Addr: app.config.addr,
-	Handler: h,
-	ReadTimeout:  10 * time.Second,
-	WriteTimeout: 10 * time.Second,
-	IdleTimeout:  120 * time.Second,
+		Addr:         app.config.addr,
+		Handler:      h,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  120 * time.Second,
 	}
 
 	log.Printf("Application has started at addr %s", app.config.addr)
@@ -59,12 +59,12 @@ func (app *api) run(h http.Handler) error {
 
 type api struct {
 	config config
-	db *pgx.Conn
+	db     *pgx.Conn
 }
 
 type config struct {
 	addr string
-	db dbConfig
+	db   dbConfig
 }
 
 type dbConfig struct {

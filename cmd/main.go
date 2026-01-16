@@ -13,38 +13,36 @@ func main() {
 	env.LoadENV()
 
 	config := config{
-	addr: ":8080",
-	db: dbConfig{
-		dsn: env.GetString("GOOSE_DBSTRING", "host=localhost user=pqgotest password=postgres dbname=pqgotest sslmode=disable"),
-	},
+		addr: ":8080",
+		db: dbConfig{
+			dsn: env.GetString("GOOSE_DBSTRING", "host=localhost user=pqgotest password=postgres dbname=pqgotest sslmode=disable"),
+		},
 	}
 
-	
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 	slog.SetDefault(logger)
-	
+
 	ctx := context.Background()
-	
-	conn, DBErr := pgx.Connect(ctx, config.db.dsn)
-	
-	if DBErr != nil {
-		panic(DBErr)
+
+	conn, err := pgx.Connect(ctx, config.db.dsn)
+
+	if err != nil {
+		panic(err)
 	}
-	
+
 	defer conn.Close(ctx)
-	
-	
+
 	logger.Info("connected to database")
-	
+
 	api := api{
 		config: config,
-		db: conn,
+		db:     conn,
 	}
 
-	runnerErr := api.run(api.mount())
+	err = api.run(api.mount())
 
-	if runnerErr != nil {
-		slog.Error("Error running API", "error", runnerErr)
+	if err != nil {
+		slog.Error("Error running API", "error", err)
 		os.Exit(1)
 	}
 }

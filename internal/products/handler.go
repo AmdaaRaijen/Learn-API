@@ -20,7 +20,7 @@ func NewHandler(s Service) *handler {
 	return &handler{service: s}
 }
 
-func(h *handler) ListProducts(w http.ResponseWriter, r *http.Request) {
+func (h *handler) ListProducts(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
 	textName := pgtype.Text{String: name, Valid: name != ""}
 
@@ -35,7 +35,7 @@ func(h *handler) ListProducts(w http.ResponseWriter, r *http.Request) {
 	json.Write(w, http.StatusOK, products)
 }
 
-func(h *handler) GetProductById(w http.ResponseWriter, r *http.Request) {
+func (h *handler) GetProductById(w http.ResponseWriter, r *http.Request) {
 	productId := chi.URLParam(r, "id")
 
 	productIdInt, err := strconv.ParseInt(productId, 10, 64)

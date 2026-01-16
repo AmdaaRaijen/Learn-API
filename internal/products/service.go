@@ -17,17 +17,19 @@ type service struct {
 }
 
 func NewService(repo repo.Querier) Service {
-	return  &service{
+	return &service{
 		repo: repo,
 	}
 }
 
 func (s *service) GetListOfProducts(ctx context.Context, name pgtype.Text) ([]repo.Product, error) {
-	if name.Valid { return  s.repo.ListProducts(ctx, name)}
+	if name.Valid {
+		return s.repo.ListProducts(ctx, name)
+	}
 
 	return s.repo.ListProducts(ctx, "")
 }
 
-func(s *service) GetProductById(ctx context.Context, id int64)(repo.Product, error) {
+func (s *service) GetProductById(ctx context.Context, id int64) (repo.Product, error) {
 	return s.repo.FindProductByID(ctx, id)
 }

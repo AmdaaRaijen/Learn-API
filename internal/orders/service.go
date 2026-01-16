@@ -10,9 +10,9 @@ import (
 )
 
 var (
-	ErrProductNotFound = errors.New("Product not found")
+	ErrProductNotFound   = errors.New("Product not found")
 	ErrProductOutOfStock = errors.New("Product out of stock")
-	ErrCustomerNotFound = errors.New("Customer not found")
+	ErrCustomerNotFound  = errors.New("Customer not found")
 )
 
 type Service interface {
@@ -21,13 +21,13 @@ type Service interface {
 
 type service struct {
 	repo *repo.Queries
-	db *pgx.Conn
+	db   *pgx.Conn
 }
 
 func NewService(repo *repo.Queries, db *pgx.Conn) Service {
-	return  &service{
+	return &service{
 		repo: repo,
-		db: db,
+		db:   db,
 	}
 }
 
@@ -41,7 +41,7 @@ func (s *service) PlaceOrder(ctx context.Context, tempOrder createOrderParams) (
 	}
 
 	tx, err := s.db.Begin(ctx)
-	
+
 	if err != nil {
 		return repo.Order{}, err
 	}
@@ -50,7 +50,6 @@ func (s *service) PlaceOrder(ctx context.Context, tempOrder createOrderParams) (
 
 	qtx := s.repo.WithTx(tx)
 
-	
 	customer, err := qtx.GetCustomerById(ctx, tempOrder.CustomerId)
 
 	if err != nil {
@@ -58,8 +57,6 @@ func (s *service) PlaceOrder(ctx context.Context, tempOrder createOrderParams) (
 	}
 
 	order, err := qtx.CreateOrder(ctx, customer.ID)
-
-
 
 	for _, item := range tempOrder.Items {
 		product, err := qtx.FindProductByID(ctx, item.ProductID)
@@ -73,10 +70,10 @@ func (s *service) PlaceOrder(ctx context.Context, tempOrder createOrderParams) (
 		}
 
 		_, err = qtx.CreateOrderItem(ctx, repo.CreateOrderItemParams{
-			OrderID: order.ID,
+			OrderID:   order.ID,
 			ProductID: product.ID,
-			Quantity: item.Quantity,
-			Price: product.Price,
+			Quantity:  item.Quantity,
+			Price:     product.Price,
 		})
 
 		if err != nil {
@@ -84,9 +81,9 @@ func (s *service) PlaceOrder(ctx context.Context, tempOrder createOrderParams) (
 		}
 
 		qtx.UpdateProduct(ctx, repo.UpdateProductParams{
-			ID: item.ProductID,
-			Name: product.Name,
-			Price: product.Price,
+			ID:       item.ProductID,
+			Name:     product.Name,
+			Price:    product.Price,
 			Quantity: product.Quantity - item.Quantity,
 		})
 	}
@@ -95,4 +92,3 @@ func (s *service) PlaceOrder(ctx context.Context, tempOrder createOrderParams) (
 
 	return order, nil
 }
-
