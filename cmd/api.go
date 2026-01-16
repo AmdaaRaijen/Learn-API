@@ -6,6 +6,7 @@ import (
 	"time"
 
 	repo "github.com/amdaaraijen/Learn-API/internal/adapters/pgsql/sqlc"
+	"github.com/amdaaraijen/Learn-API/internal/orders"
 	"github.com/amdaaraijen/Learn-API/internal/products"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -33,6 +34,10 @@ func (app *api) mount() http.Handler {
 		r.Get("/", productHandler.ListProducts)
 		r.Get("/{id}", productHandler.GetProductById)
 	})
+
+	orderHandler := orders.NewHandler(nil)
+
+	r.Post("/orders", orderHandler.PlaceOrder)
 
 	return r
 }

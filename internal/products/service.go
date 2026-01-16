@@ -16,7 +16,7 @@ type service struct {
 	repo repo.Querier
 }
 
-func NewService(repo repo.Querier) *service {
+func NewService(repo repo.Querier) Service {
 	return  &service{
 		repo: repo,
 	}
