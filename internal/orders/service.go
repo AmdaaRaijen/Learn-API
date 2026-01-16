@@ -82,6 +82,13 @@ func (s *service) PlaceOrder(ctx context.Context, tempOrder createOrderParams) (
 		if err != nil {
 			return repo.Order{}, err
 		}
+
+		qtx.UpdateProduct(ctx, repo.UpdateProductParams{
+			ID: item.ProductID,
+			Name: product.Name,
+			Price: product.Price,
+			Quantity: product.Quantity - item.Quantity,
+		})
 	}
 
 	tx.Commit(ctx)

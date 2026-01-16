@@ -27,10 +27,15 @@ func (h *handler) PlaceOrder(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to place order", http.StatusBadRequest)
 		return
 	}
-
+	
 	createdOrder, err := h.service.PlaceOrder(r.Context(), tempOrder)
-
+	
 	if err != nil {
+		if err == ErrProductNotFound || err == ErrProductOutOfStock || err == ErrCustomerNotFound {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
