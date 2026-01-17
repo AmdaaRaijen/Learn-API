@@ -13,7 +13,8 @@ func main() {
 	env.LoadENV()
 
 	config := config{
-		addr: ":8080",
+		addr:      ":8080",
+		jwtSecret: env.GetString("JWT_SECRET", ""),
 		db: dbConfig{
 			dsn: env.GetString("GOOSE_DBSTRING", "host=localhost user=pqgotest password=postgres dbname=pqgotest sslmode=disable"),
 		},

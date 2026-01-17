@@ -66,12 +66,17 @@ func (h *handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = h.service.LoginUser(r.Context(), req)
+	token, err := h.service.LoginUser(r.Context(), req)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
 
-	json.Write(w, http.StatusOK, "login success")
+	res := loginResponse{
+		Message: "Login Success",
+		Token:   token,
+	}
+
+	json.Write(w, http.StatusOK, res)
 }

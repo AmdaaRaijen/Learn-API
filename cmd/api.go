@@ -9,6 +9,7 @@ import (
 	"github.com/amdaaraijen/Learn-API/internal/core/auth"
 	"github.com/amdaaraijen/Learn-API/internal/core/orders"
 	"github.com/amdaaraijen/Learn-API/internal/core/products"
+	"github.com/amdaaraijen/Learn-API/internal/pkg/token"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5"
@@ -28,6 +29,8 @@ func (app *api) mount() http.Handler {
 		w.Write([]byte("Ok"))
 	})
 
+	JWTMaker := token.NewJWTMaker(app.config.jwtSecret)
+
 	productService := products.NewService(repo.New(app.db))
 	productHandler := products.NewHandler(productService)
 
@@ -41,7 +44,7 @@ func (app *api) mount() http.Handler {
 
 	r.Post("/orders", orderHandler.PlaceOrder)
 
-	authService := auth.NewService(repo.New(app.db))
+	authService := auth.NewService(repo.New(app.db), *JWTMaker)
 	authHandler := auth.NewHandler(authService)
 
 	r.Post("/register", authHandler.Register)
@@ -70,8 +73,9 @@ type api struct {
 }
 
 type config struct {
-	addr string
-	db   dbConfig
+	addr      string
+	jwtSecret string
+	db        dbConfig
 }
 
 type dbConfig struct {

@@ -22,6 +22,11 @@ type registerResponse struct {
 	Data    userDTO `json:"data"`
 }
 
+type loginResponse struct {
+	Message string `json:"message"`
+	Token   string `json:"token"`
+}
+
 type userDTO struct {
 	ID          int64     `json:"id"`
 	Name        string    `json:"name"`
