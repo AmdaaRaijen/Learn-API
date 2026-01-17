@@ -42,7 +42,7 @@ func (h *handler) Register(w http.ResponseWriter, r *http.Request) {
 		Data: userDTO{
 			ID:          registeredUser.ID,
 			Name:        registeredUser.Name,
-			Email:       registeredUser.Email.String,
+			Email:       registeredUser.Email,
 			PhoneNumber: &registeredUser.PhoneNumber.String,
 			CreatedAt:   registeredUser.CreatedAt.Time,
 		},
@@ -66,5 +66,12 @@ func (h *handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.Write(w, http.StatusCreated, "login success")
+	_, err = h.service.LoginUser(r.Context(), req)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+
+	json.Write(w, http.StatusOK, "login success")
 }
