@@ -10,21 +10,26 @@ type handler struct {
 	service Service
 }
 
-func NewHandler(s *Service) *handler {
+func NewHandler(s Service) *handler {
 	return &handler{
 		service: s,
 	}
 }
 
 func (h *handler) Register(w http.ResponseWriter, r *http.Request) {
-	var tempRegister registerRequestParams
+	var req registerRequestParams
 
-	err := json.Read(r, &tempRegister)
+	err := json.Read(r, &req)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	json.Write(w, http.StatusCreated, tempRegister)
+	if err := req.Validate(); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	json.Write(w, http.StatusCreated, req)
 }
