@@ -31,5 +31,11 @@ func (h *handler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.Write(w, http.StatusCreated, req)
+	registeredUser, err := h.service.ResgisterUser(r.Context(), req)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	json.Write(w, http.StatusCreated, registeredUser)
 }

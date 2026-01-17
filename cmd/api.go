@@ -41,7 +41,8 @@ func (app *api) mount() http.Handler {
 
 	r.Post("/orders", orderHandler.PlaceOrder)
 
-	authHandler := auth.NewHandler(nil)
+	authService := auth.NewService()
+	authHandler := auth.NewHandler(authService)
 
 	r.Post("/register", authHandler.Register)
 

@@ -2,6 +2,8 @@ package auth
 
 import (
 	"context"
+
+	"github.com/amdaaraijen/Learn-API/internal/encrypt"
 )
 
 type Service interface {
@@ -16,5 +18,13 @@ func NewService() *service {
 }
 
 func (s *service) ResgisterUser(ctx context.Context, req registerRequestParams) (registerRequestParams, error) {
+	hashed, err := encrypt.HashPassword(req.Password)
+
+	if err != nil {
+		return registerRequestParams{}, err
+	}
+
+	req.Password = hashed
+
 	return req, nil
 }
