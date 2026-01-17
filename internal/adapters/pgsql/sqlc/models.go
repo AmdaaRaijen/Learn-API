@@ -11,7 +11,7 @@ import (
 type Customer struct {
 	ID          int64              `json:"id"`
 	Name        string             `json:"name"`
-	Email       pgtype.Text        `json:"email"`
+	Email       string             `json:"email"`
 	PhoneNumber pgtype.Text        `json:"phone_number"`
 	CreatedAt   pgtype.Timestamptz `json:"created_at"`
 	Password    string             `json:"password"`

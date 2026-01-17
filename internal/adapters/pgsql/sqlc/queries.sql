@@ -18,5 +18,8 @@ INSERT INTO order_items (product_id, order_id, quantity, price) VALUES ($1, $2, 
 -- name: GetCustomerById :one
 SELECT * FROM customers WHERE id = $1;
 
+-- name: GetCustomerByEmail :one
+SELECT * FROM customers WHERE email = $1;
+
 -- name: CreateUser :one
 INSERT INTO customers (name, email, phone_number, password) VALUES ($1, $2, $3, $4) RETURNING *;

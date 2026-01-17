@@ -58,7 +58,7 @@ INSERT INTO customers (name, email, phone_number, password) VALUES ($1, $2, $3, 
 
 type CreateUserParams struct {
 	Name        string      `json:"name"`
-	Email       pgtype.Text `json:"email"`
+	Email       string      `json:"email"`
 	PhoneNumber pgtype.Text `json:"phone_number"`
 	Password    string      `json:"password"`
 }
@@ -95,6 +95,24 @@ func (q *Queries) FindProductByID(ctx context.Context, id int64) (Product, error
 		&i.Price,
 		&i.Quantity,
 		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const getCustomerByEmail = `-- name: GetCustomerByEmail :one
+SELECT id, name, email, phone_number, created_at, password FROM customers WHERE email = $1
+`
+
+func (q *Queries) GetCustomerByEmail(ctx context.Context, email string) (Customer, error) {
+	row := q.db.QueryRow(ctx, getCustomerByEmail, email)
+	var i Customer
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Email,
+		&i.PhoneNumber,
+		&i.CreatedAt,
+		&i.Password,
 	)
 	return i, err
 }
