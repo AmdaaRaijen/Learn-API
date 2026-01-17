@@ -12,6 +12,11 @@ type registerRequestParams struct {
 	Password    string `json:"password"`
 }
 
+type loginRequestParams struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 type registerResponse struct {
 	Message string  `json:"message"`
 	Data    userDTO `json:"data"`
@@ -36,6 +41,18 @@ func (r registerRequestParams) Validate() error {
 
 	if r.PhoneNumber == "" {
 		return errors.New("phone number is required")
+	}
+
+	if len(r.Password) < 8 {
+		return errors.New("password must be at least 8 characters")
+	}
+
+	return nil
+}
+
+func (r loginRequestParams) Validate() error {
+	if r.Email == "" {
+		return errors.New("email is required")
 	}
 
 	if len(r.Password) < 8 {

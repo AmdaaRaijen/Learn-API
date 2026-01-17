@@ -50,3 +50,21 @@ func (h *handler) Register(w http.ResponseWriter, r *http.Request) {
 
 	json.Write(w, http.StatusCreated, res)
 }
+
+func (h *handler) Login(w http.ResponseWriter, r *http.Request) {
+	var req loginRequestParams
+
+	err := json.Read(r, &req)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if err := req.Validate(); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	json.Write(w, http.StatusCreated, "login success")
+}

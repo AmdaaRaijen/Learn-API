@@ -45,6 +45,7 @@ func (app *api) mount() http.Handler {
 	authHandler := auth.NewHandler(authService)
 
 	r.Post("/register", authHandler.Register)
+	r.Post("/login", authHandler.Login)
 
 	return r
 }
