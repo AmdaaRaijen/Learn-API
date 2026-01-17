@@ -6,6 +6,7 @@ import (
 	"time"
 
 	repo "github.com/amdaaraijen/Learn-API/internal/adapters/pgsql/sqlc"
+	"github.com/amdaaraijen/Learn-API/internal/core/auth"
 	"github.com/amdaaraijen/Learn-API/internal/core/orders"
 	"github.com/amdaaraijen/Learn-API/internal/core/products"
 	"github.com/go-chi/chi/v5"
@@ -39,6 +40,10 @@ func (app *api) mount() http.Handler {
 	orderHandler := orders.NewHandler(orderService)
 
 	r.Post("/orders", orderHandler.PlaceOrder)
+
+	authHandler := auth.NewHandler(nil)
+
+	r.Post("/register", authHandler.Register)
 
 	return r
 }
