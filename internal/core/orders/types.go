@@ -6,6 +6,5 @@ type orderItem struct {
 }
 
 type createOrderParams struct {
-	CustomerId int64       `json:"customerId"`
-	Items      []orderItem `json:"items"`
+	Items []orderItem `json:"items"`
 }

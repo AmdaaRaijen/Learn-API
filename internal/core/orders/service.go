@@ -16,7 +16,7 @@ var (
 )
 
 type Service interface {
-	PlaceOrder(ctx context.Context, tempOrder createOrderParams) (repo.Order, error)
+	PlaceOrder(ctx context.Context, tempOrder createOrderParams, userId int64) (repo.Order, error)
 }
 
 type service struct {
@@ -31,8 +31,8 @@ func NewService(repo *repo.Queries, db *pgx.Conn) Service {
 	}
 }
 
-func (s *service) PlaceOrder(ctx context.Context, tempOrder createOrderParams) (repo.Order, error) {
-	if tempOrder.CustomerId == 0 {
+func (s *service) PlaceOrder(ctx context.Context, tempOrder createOrderParams, userId int64) (repo.Order, error) {
+	if userId == 0 {
 		return repo.Order{}, fmt.Errorf("CustomerId is required!")
 	}
 
@@ -50,7 +50,7 @@ func (s *service) PlaceOrder(ctx context.Context, tempOrder createOrderParams) (
 
 	qtx := s.repo.WithTx(tx)
 
-	customer, err := qtx.GetCustomerById(ctx, tempOrder.CustomerId)
+	customer, err := qtx.GetCustomerById(ctx, userId)
 
 	if err != nil {
 		return repo.Order{}, ErrCustomerNotFound

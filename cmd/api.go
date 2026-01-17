@@ -9,6 +9,7 @@ import (
 	"github.com/amdaaraijen/Learn-API/internal/core/auth"
 	"github.com/amdaaraijen/Learn-API/internal/core/orders"
 	"github.com/amdaaraijen/Learn-API/internal/core/products"
+	jwtMiddleware "github.com/amdaaraijen/Learn-API/internal/middleware"
 	"github.com/amdaaraijen/Learn-API/internal/pkg/token"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -42,7 +43,9 @@ func (app *api) mount() http.Handler {
 	orderService := orders.NewService(repo.New(app.db), app.db)
 	orderHandler := orders.NewHandler(orderService)
 
-	r.Post("/orders", orderHandler.PlaceOrder)
+	r.Route("/orders", func(r chi.Router) {
+		r.With(jwtMiddleware.JWTAuth(JWTMaker)).Post("/", orderHandler.PlaceOrder)
+	})
 
 	authService := auth.NewService(repo.New(app.db), *JWTMaker)
 	authHandler := auth.NewHandler(authService)
