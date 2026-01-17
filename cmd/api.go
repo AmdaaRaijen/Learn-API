@@ -6,8 +6,8 @@ import (
 	"time"
 
 	repo "github.com/amdaaraijen/Learn-API/internal/adapters/pgsql/sqlc"
-	"github.com/amdaaraijen/Learn-API/internal/orders"
-	"github.com/amdaaraijen/Learn-API/internal/products"
+	"github.com/amdaaraijen/Learn-API/internal/core/orders"
+	"github.com/amdaaraijen/Learn-API/internal/core/products"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5"
