@@ -68,7 +68,7 @@ func (q *Queries) FindProductByID(ctx context.Context, id int64) (Product, error
 }
 
 const getCustomerById = `-- name: GetCustomerById :one
-SELECT id, name, email, phone_number, created_at FROM customers WHERE id = $1
+SELECT id, name, email, phone_number, created_at, password FROM customers WHERE id = $1
 `
 
 func (q *Queries) GetCustomerById(ctx context.Context, id int64) (Customer, error) {
@@ -80,6 +80,7 @@ func (q *Queries) GetCustomerById(ctx context.Context, id int64) (Customer, erro
 		&i.Email,
 		&i.PhoneNumber,
 		&i.CreatedAt,
+		&i.Password,
 	)
 	return i, err
 }

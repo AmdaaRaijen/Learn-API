@@ -14,6 +14,7 @@ type Customer struct {
 	Email       pgtype.Text        `json:"email"`
 	PhoneNumber pgtype.Text        `json:"phone_number"`
 	CreatedAt   pgtype.Timestamptz `json:"created_at"`
+	Password    string             `json:"password"`
 }
 
 type Order struct {
