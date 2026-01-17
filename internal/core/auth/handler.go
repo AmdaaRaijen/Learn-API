@@ -37,5 +37,16 @@ func (h *handler) Register(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	json.Write(w, http.StatusCreated, registeredUser)
+	res := registerResponse{
+		Message: "User registered successfully",
+		Data: userDTO{
+			ID:          registeredUser.ID,
+			Name:        registeredUser.Name,
+			Email:       registeredUser.Email.String,
+			PhoneNumber: &registeredUser.PhoneNumber.String,
+			CreatedAt:   registeredUser.CreatedAt.Time,
+		},
+	}
+
+	json.Write(w, http.StatusCreated, res)
 }

@@ -1,12 +1,28 @@
 package auth
 
-import "errors"
+import (
+	"errors"
+	"time"
+)
 
 type registerRequestParams struct {
 	Name        string `json:"name"`
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phone_number"`
 	Password    string `json:"password"`
+}
+
+type registerResponse struct {
+	Message string  `json:"message"`
+	Data    userDTO `json:"data"`
+}
+
+type userDTO struct {
+	ID          int64     `json:"id"`
+	Name        string    `json:"name"`
+	Email       string    `json:"email"`
+	PhoneNumber *string   `json:"phone_number,omitempty"`
+	CreatedAt   time.Time `json:"created_at"`
 }
 
 func (r registerRequestParams) Validate() error {
